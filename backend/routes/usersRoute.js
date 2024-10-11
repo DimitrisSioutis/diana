@@ -45,13 +45,12 @@ router.post('/login', async (req, res) => {
         );
 
         res.cookie('jwt', refreshToken, {
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-            secure: false, // Not using HTTPS in development
+            maxAge: 24 * 60 * 60 * 1000,
+            secure: false, 
             domain: undefined,
             httpOnly: true,
         });
-        
-        
+
         res.status(200).send({
             message: 'Logged in successfully',
             accessToken
@@ -64,13 +63,12 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', async (req, res) => {
     res.clearCookie('jwt', {
-        maxAge: 24 * 60 * 60 * 1000, // 1 day
-        secure: false, // Not using HTTPS in development
+        maxAge: 24 * 60 * 60 * 1000, 
+        secure: false,
         domain: undefined,
         httpOnly: true
     });
     res.status(200).json({ success: true, message: "Logged out successfully" });
-    
 });
 
 router.get('/auth', (req, res) => {

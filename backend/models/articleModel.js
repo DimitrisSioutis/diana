@@ -14,9 +14,13 @@ const articleSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    img:{
+    thumbnail:{
         type: String,
         required: true
+    },
+    createdAt:{
+      type: Date,
+      required: true
     }
   },
   {

@@ -1,16 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import Slider from '../components/home/Slider';
-import ArticleGrid from '../components/home/ArticleGrid';
+import React from 'react'
+import Hero from '../components/home/Hero';
+import Articles from '../components/home/Articles';
+import Highlight from '../components/home/Highlight';
+import Fixtures from '../components/home/Fixtures';
+import Sponsors from '../components/home/Sponsors';
 
-const Home = ({latestArticles}) => {
-  const sectionRef = useRef(null);
+// eslint-disable-next-line react/prop-types
+const Home = ({articles,fixtures,highlight}) => {
 
   return (
-    <div className="flex flex-col items-center">
-      <Slider latestArticles={latestArticles}/>
-      <ArticleGrid latestArticles={latestArticles}/>
+    <div className='bg-slate-50'>
+      <Hero/>
+      <Articles articles={articles}/>
+      <Highlight highlight={highlight}/>
+      <Fixtures fixtures={fixtures}/>
+      <Sponsors />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const articles = await Article.find({})
+        const articles = await Article.find({}).sort({createdAt: -1}).select('_id title');
         return res.status(201).send(articles)
     }
     catch (error) {
@@ -17,7 +17,7 @@ router.get('/latest', async (req, res) => {
     try {
         const articles = await Article.find({})
         .sort({ createdAt: -1 }) // Sort by createdAt in descending order
-        .limit(9); // Limit the result to the next 6 articles (4th to 9th)
+        .limit(12); // Limit the result to the next 6 articles (4th to 9th)
         return res.status(200).send(articles); 
     } catch (error) {
       console.log(error.message);

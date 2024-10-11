@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useInView } from 'react-intersection-observer';
 
 const News = () => {
-  const { page } = useParams(); // Get page param from URL
+  const { page: pageString } = useParams();
+  const page = parseInt(pageString, 10);
   const navigate = useNavigate();
+  const location = useLocation();
   const [articlesMap, setArticlesMap] = useState(new Map());
   const [lastPage, setLastPage] = useState(1);
   const [viewLimit, setViewLimit] = useState(2);
-  const [currentPage, setCurrentPage] = useState(parseInt(page, 10) || 1);
   const { ref: observerRef, inView } = useInView({
     threshold: 0.9,
     triggerOnce: false,
@@ -17,52 +18,36 @@ const News = () => {
 
   const api = import.meta.env.VITE_API_URL;
 
-  // Fetch articles when the currentPage changes
-  const fetchArticles = async (pageNumber) => {
-    console.log("Fetching articles for page:", pageNumber); // Check if this logs
-    if (!articlesMap.has(pageNumber)) {
+  const fetchArticles = async (pageNum) => {
+    if (!articlesMap.has(pageNum)) {
       try {
-        const res = await axios.get(`${api}/articles/page?page=${pageNumber}`);
-        setArticlesMap((prev) => new Map(prev).set(pageNumber, res.data.articles));
+        const res = await axios.get(`${api}/articles/page?page=${pageNum}`);
+        setArticlesMap((prev) => new Map(prev).set(pageNum, res.data.articles));
         setLastPage(Math.ceil(res.data.count / 10));
       } catch (error) {
         console.error('Error fetching articles:', error);
       }
-    } else {
-      console.log(`Page ${pageNumber} already fetched, using cache.`);
     }
   };
 
-  // Synchronize currentPage state with the URL parameter
+  // Fetch articles when page changes
   useEffect(() => {
-    const newPage = parseInt(page, 10) || 1;
-    setCurrentPage(newPage);
-  }, [page]);
-
-  // Fetch articles when currentPage changes
-  useEffect(() => {
-    fetchArticles(currentPage);
-  }, [currentPage]);
+    fetchArticles(page);
+  }, [location]);
 
   // Handle infinite scroll or load more articles
   useEffect(() => {
-    if (inView && articlesMap.get(currentPage)?.length >= viewLimit) {
+    if (inView && articlesMap.get(page)?.length >= viewLimit) {
       setViewLimit((prevLimit) => prevLimit + 2);
     }
   }, [inView]);
 
-  // Pagination controls
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    navigate(`/news/page/${newPage}`); // Update URL with new page number
-  };
-
   return (
     <div className="container mx-auto">
       <div className="flex flex-wrap justify-center">
-        {articlesMap.has(currentPage) ? (
+        {articlesMap.has(page) ? (
           articlesMap
-            .get(currentPage)
+            .get(page)
             .slice(0, viewLimit)
             .map((article, index) => (
               <div
@@ -72,9 +57,9 @@ const News = () => {
               >
                 <div
                   className="md:w-1/2 w-full md:h-auto bg-cover bg-center rounded-l-lg overflow-hidden"
-                  style={{ backgroundImage: `url(${article.img})` }}
+                  style={{ backgroundImage: `url(${article.thumbnail})` }}
                 >
-                  <img src={article.img} alt={article.title} className="hidden" />
+                  <img src={article.thumbnail} alt={article.title} className="hidden" />
                 </div>
                 <div className="md:w-1/2 w-full p-4 flex flex-col justify-between">
                   <div>
@@ -95,21 +80,21 @@ const News = () => {
       </div>
 
       <div className="flex justify-center space-x-4 mt-4">
-        {currentPage > 1 && (
+        {page > 1 && (
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
+            onClick={() => navigate(`/news/page/${page-1}`)}
             className="px-4 py-2 bg-blue-500 text-white rounded"
           >
-            Previous
+            Προηγούμενη
           </button>
         )}
 
-        {currentPage < lastPage && (
+        {page < lastPage && (
           <button
-            onClick={() => handlePageChange(currentPage + 1)}
+            onClick={() =>  navigate(`/news/page/${page+1}`)}
             className="px-4 py-2 bg-blue-500 text-white rounded"
           >
-            Next
+            Επόμενη
           </button>
         )}
       </div>

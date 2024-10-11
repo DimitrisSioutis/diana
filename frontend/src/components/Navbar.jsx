@@ -1,32 +1,23 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import Logo from './Logo'
-import { FaFacebookF ,FaYoutube ,  FaInstagram } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
-function Navbar() {
+const Navbar = () => {
   return (
-    <header className="w-full h-20 m-0 flex bg-gray-900 justify-around z-50">
-        <div className="">
-            <Link to={'/'} className='cursor-pointer'><Logo/></Link>
-        </div>
-        <nav className="h-full">
-            <ul className='flex h-full'>
-                <li className='h-full w-32 flex items-center justify-center text-gray-300 '><Link to={'/news'}>Νέα</Link></li>
-                <li className='h-full w-32 flex items-center justify-center text-gray-300 '><Link to={'/team'}>Ομάδα</Link></li>
-                <li className='h-full w-32 flex items-center justify-center text-gray-300 '><Link to={'/academy'}>Ακαδημία</Link></li>
-            </ul>
-        </nav>
-        <div className="flex items-center space-x-8 bg-gray-900 p-2">
-            <a href="#" className="text-white hover:text-red-500">
-                <FaFacebookF size={24} />
-            </a>
-            <a href="#" className="text-white hover:text-red-500">
-                <FaInstagram size={24} />
-            </a>
-            <a href="#" className="text-white hover:text-red-500">
-                <FaYoutube size={24} />
-            </a>
-        </div>
+    <header className='h-20 w-full flex justify-between '>
+        <ul className='list-none w-2/4 min-w-[450px]  flex items-center bg-slate-50 px-8' style={{clipPath:'polygon(0 0, 95% 0, 100% 100%, 0% 100%)'}}>
+          <Link to={'/news'}><li className='p-10 tracking-tighter'>ΝΕΑ</li></Link>
+          <Link to={'/news'}><li className='p-10 tracking-tighter'>ΟΜΑΔΑ</li></Link>
+          <Link to={'/news'}><li className='p-10 tracking-tighter'>ΑΚΑΔΗΜΙΑ</li></Link>
+        </ul>
+        <Link className='w-24 scale-125 relative -top-4' to={'/'}><img src="/public/logo.svg" alt="logo"  /></Link>
+        <ul className='list-none w-2/4 min-w-[400px] flex items-center bg-slate-50 justify-end px-8' style={{ clipPath: 'polygon(5% 0, 100% 0, 100% 100%, 0% 100%)'}}>
+          <li className='p-4'><FaInstagram className=" hover:text-rose-500" size="20px"/></li>
+          <li className='p-4'><FaFacebook className=" hover:text-rose-500" size="20px"/></li>
+          <li className='p-4'><FaYoutube className=" hover:text-rose-500" size="20px"/></li>
+        </ul>
     </header>
   )
 }

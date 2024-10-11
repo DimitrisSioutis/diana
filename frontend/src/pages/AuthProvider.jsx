@@ -11,18 +11,27 @@ export const AuthProvider = ({ children }) => {
         const checkLoginStatus = async () => {
             try {
                 const res = await axios.get(`${api}/user/auth`, { withCredentials: true });
-                setAuth({
-                    accessToken: res.data.accessToken,
-                    user: res.data.user
+                setAuth(prevAuth => {
+                    if (JSON.stringify(prevAuth) !== JSON.stringify({
+                        accessToken: res.data.accessToken,
+                        user: res.data.user
+                    })) {
+                        return {
+                            accessToken: res.data.accessToken,
+                            user: res.data.user
+                        };
+                    }
+                    return prevAuth;
                 });
             } catch (error) {
                 console.error("User is not logged in", error);
-                setAuth();
+                setAuth(prevAuth => prevAuth ? null : prevAuth);
             }
         };
-
+    
         checkLoginStatus();
-    }, []);
+    }, [api]); 
+
 
     return (
         <AuthContext.Provider value={{ auth, setAuth }}>
